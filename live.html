@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Live Class — BioSprint</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-brand">BioSprint</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="live.html" class="active">Live</a></li>
+    <li><a href="resources.html">Resources</a></li>
+  </ul>
+</nav>
+
+<main class="pt-nav">
+  <div class="container">
+    <div class="live-layout">
+
+      <!-- LEFT: Video + meta -->
+      <div>
+        <!-- Top info bar -->
+        <div class="live-topbar">
+          <div class="live-indicator">
+            <span class="live-dot"></span>
+            Live
+          </div>
+
+          <div class="live-topbar-sep"></div>
+
+          <div class="live-topbar-item">
+            <span class="live-topbar-label">Day</span>
+            <!-- ✏️  Change the day number below -->
+            <span class="live-topbar-value">Day 1</span>
+          </div>
+
+          <div class="live-topbar-sep"></div>
+
+          <div class="live-topbar-item">
+            <span class="live-topbar-label">Chapter</span>
+            <!-- ✏️  Change the chapter name below -->
+            <span class="live-topbar-value">The Living World</span>
+          </div>
+
+          <div class="live-topbar-sep"></div>
+
+          <div class="live-topbar-item">
+            <span class="live-topbar-label">Topic</span>
+            <!-- ✏️  Change the topic below -->
+            <span class="live-topbar-value">Taxonomy &amp; Classification</span>
+          </div>
+        </div>
+
+        <!-- YouTube Embed -->
+        <div class="video-wrapper">
+          <!--
+            ████████████████████████████████████████████████████████
+            PASTE YOUR YOUTUBE EMBED IFRAME BELOW
+            Replace the src with your actual YouTube embed URL:
+            Format: https://www.youtube.com/embed/VIDEO_ID
+            Example:
+            <iframe
+              src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen>
+            </iframe>
+            ████████████████████████████████████████████████████████
+          -->
+
+          <!-- PLACEHOLDER — remove this div once you add the iframe above -->
+          <div class="video-placeholder">
+            <span class="video-placeholder-icon">▶</span>
+            <span>Paste your YouTube embed iframe here</span>
+            <span style="font-size:0.75rem;opacity:0.6;">See the HTML comment above for instructions</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Side panel -->
+      <div class="live-panel">
+
+        <!-- Instructions -->
+        <div class="card">
+          <p class="panel-title">Instructions</p>
+          <ul class="notes-list">
+            <!-- ✏️  Edit instructions as needed -->
+            <li>Keep your mic muted unless called upon.</li>
+            <li>Use the chat box to ask doubts — they will be addressed at the end.</li>
+            <li>Have your NCERT textbook ready alongside.</li>
+            <li>Attempt the DPP immediately after class for best retention.</li>
+            <li>Recordings will be available within 2 hours after the session ends.</li>
+          </ul>
+        </div>
+
+        <!-- Important Notes -->
+        <div class="card">
+          <p class="panel-title">Important Notes</p>
+          <ul class="notes-list">
+            <!-- ✏️  Edit notes for each session -->
+            <li>Today's class will cover high-weightage PYQ topics from 2018–2024.</li>
+            <li>The Day 5 test will include all chapters from Days 1–5. Be prepared.</li>
+            <li>DPP PDF is available on the Resources page.</li>
+          </ul>
+        </div>
+
+        <!-- Poll -->
+        <div class="card">
+          <p class="panel-title">Quick Poll</p>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.75rem;">
+            Participate in today's live poll to check your understanding.
+          </p>
+          <!-- ✏️  Replace # with your poll link (Google Form, Mentimeter, etc.) -->
+          <a href="#" class="poll-btn" target="_blank" rel="noopener">
+            &#128202; Open Poll
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  &copy; 2025 BioSprint &mdash; NEET Biology 20-Day Sprint. All rights reserved.
+</footer>
+
+</body>
+</html>
