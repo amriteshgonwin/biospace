@@ -1,0 +1,31 @@
+plugins = []
+headers = []
+redirects = []
+
+[dev]
+command = "npx serve site"
+port = 8888
+
+[functions]
+
+  [functions."*"]
+
+[build]
+publish = "/opt/build/repo/site"
+publishOrigin = "config"
+commandOrigin = "ui"
+command = "npm run build"
+
+  [build.environment]
+
+  [build.processing]
+
+    [build.processing.css]
+
+    [build.processing.html]
+
+    [build.processing.images]
+
+    [build.processing.js]
+
+  [build.services]
