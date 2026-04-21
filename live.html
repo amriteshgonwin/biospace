@@ -168,20 +168,18 @@ async function fetchConfig() {
     const r = await fetch(API + '?action=getConfig');
     const d = await r.json();
 
-    // Day / Chapter / Topic
     document.getElementById('day-display').textContent = d.day || '—';
     document.getElementById('chapter-display').textContent = d.chapter || '—';
     document.getElementById('topic-display').textContent = d.topic || '—';
 
-    // LIVE indicator
     const liveOn = d.liveEnabled === 'true' || d.liveEnabled === true;
     document.getElementById('live-indicator').style.display = liveOn ? 'flex' : 'none';
     document.getElementById('live-sep').style.display = liveOn ? 'block' : 'none';
 
-    // Announcement banner
     const banner = document.getElementById('announcement-banner');
     const nav = document.getElementById('main-nav');
     const main = document.getElementById('main-content');
+
     if (d.announcement && d.announcement.trim()) {
       banner.textContent = '📢 ' + d.announcement.trim();
       banner.style.display = 'block';
@@ -193,10 +191,8 @@ async function fetchConfig() {
       main.style.paddingTop = '60px';
     }
 
-    // Poll
     const pollOn = d.pollEnabled === 'true' || d.pollEnabled === true;
 
-    // If poll was enabled and now disabled — reset voted state
     if (pollWasEnabled && !pollOn) {
       localStorage.removeItem(VOTED_KEY);
       hasVoted = false;
@@ -207,8 +203,8 @@ async function fetchConfig() {
       showPollState('disabled');
     } else {
       const votedOption = localStorage.getItem(VOTED_KEY);
-      if (votedOption) {
-        hasVoted = true;
+
+      if (votedOption && hasVoted) {
         document.getElementById('your-answer').textContent = votedOption;
         showPollState('voted');
       } else {
@@ -225,11 +221,28 @@ function showPollState(state) {
   document.getElementById('poll-voted').style.display = state === 'voted' ? 'block' : 'none';
 }
 
+// 🔥 THIS WAS MISSING — MAIN FIX
+async function fetchVotesAndResetIfNeeded() {
+  try {
+    const r = await fetch(API + '?action=getVotes');
+    const d = await r.json();
+
+    const total = (d.A || 0) + (d.B || 0) + (d.C || 0) + (d.D || 0);
+
+    if (total === 0) {
+      localStorage.removeItem(VOTED_KEY);
+      hasVoted = false;
+    }
+
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 async function vote(option) {
   if (hasVoted) return;
   hasVoted = true;
 
-  // Highlight selected button
   ['A','B','C','D'].forEach(o => {
     document.getElementById('btn-'+o).classList.toggle('selected', o === option);
     document.getElementById('btn-'+o).disabled = true;
@@ -240,22 +253,30 @@ async function vote(option) {
       method: 'POST',
       body: JSON.stringify({ action: 'vote', option }),
     });
+
     localStorage.setItem(VOTED_KEY, option);
+
     setTimeout(() => {
       document.getElementById('your-answer').textContent = option;
       showPollState('voted');
     }, 400);
+
   } catch(e) {
-    // Even if network fails, show voted
     localStorage.setItem(VOTED_KEY, option);
     document.getElementById('your-answer').textContent = option;
     showPollState('voted');
   }
 }
 
-// Initial load + poll every 5s
+// 🚀 AUTO SYNC
 fetchConfig();
-setInterval(fetchConfig, 5000);
+fetchVotesAndResetIfNeeded();
+
+setInterval(() => {
+  fetchConfig();
+  fetchVotesAndResetIfNeeded();
+}, 3000);
+
 </script>
 
 </body>
