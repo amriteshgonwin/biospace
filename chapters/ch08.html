@@ -10,7 +10,6 @@
   <link rel="stylesheet" href="../css/style.css" />
 </head>
 <body>
-
 <nav>
   <a href="../index.html" class="nav-brand">BioSprint</a>
   <ul class="nav-links">
@@ -23,7 +22,6 @@
 <main class="pt-nav">
   <section class="chapter-page">
     <div class="container">
-
       <div class="chapter-header">
         <a href="../resources.html" class="back-link">← All Chapters</a>
         <div class="chapter-header-meta">
@@ -32,82 +30,69 @@
         </div>
       </div>
 
-      <div class="chapter-content-grid">
-
-        <div class="card chapter-resource-card">
-          <div class="chapter-resource-header">
-            <span class="chapter-resource-icon">📄</span>
-            <div>
-              <p class="chapter-resource-type">Notes</p>
-              <p class="chapter-resource-title">Class Notes PDF</p>
-            </div>
-          </div>
-          <p class="chapter-resource-desc">Handwritten / typed notes covering all NCERT points, diagrams, and PYQ highlights for this chapter.</p>
-          <!-- ✏️ Paste your Google Drive PDF link in href below -->
-          <a href="#" target="_blank" rel="noopener" class="resource-link-btn">📄 Open Notes PDF</a>
-        </div>
-
-        <div class="card chapter-resource-card">
-          <div class="chapter-resource-header">
-            <span class="chapter-resource-icon">▶</span>
-            <div>
-              <p class="chapter-resource-type">Recording</p>
-              <p class="chapter-resource-title">Class Recording</p>
-            </div>
-          </div>
-          <p class="chapter-resource-desc">Full recording of the live class. Watch at your own pace, pause and rewind anytime.</p>
-          <!-- ✏️ Paste your YouTube video URL in href below -->
-          <a href="#" target="_blank" rel="noopener" class="resource-link-btn">▶ Watch Recording</a>
-          <!--
-            To embed the recording directly on this page, uncomment below and replace YOUR_VIDEO_ID:
-          <div class="video-wrapper" style="margin-top:1rem;">
-            <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID?modestbranding=1&rel=0&iv_load_policy=3"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen></iframe>
-          </div>
-          -->
-        </div>
-
-        <div class="card chapter-resource-card">
-          <div class="chapter-resource-header">
-            <span class="chapter-resource-icon">📝</span>
-            <div>
-              <p class="chapter-resource-type">DPP</p>
-              <p class="chapter-resource-title">Daily Practice Problems</p>
-            </div>
-          </div>
-          <p class="chapter-resource-desc">Attempt before watching solutions. Covers NCERT-based and PYQ-style questions.</p>
-          <!-- ✏️ Paste your DPP PDF Google Drive link in href below -->
-          <a href="#" target="_blank" rel="noopener" class="resource-link-btn">📝 Open DPP PDF</a>
-        </div>
-
-        <div class="card chapter-resource-card">
-          <div class="chapter-resource-header">
-            <span class="chapter-resource-icon">🎯</span>
-            <div>
-              <p class="chapter-resource-type">DPP Solutions</p>
-              <p class="chapter-resource-title">Video Solutions</p>
-            </div>
-          </div>
-          <p class="chapter-resource-desc">Detailed video walkthrough of every DPP question. Watch only after attempting yourself.</p>
-          <!-- ✏️ Paste your DPP solution YouTube URL in href below -->
-          <a href="#" target="_blank" rel="noopener" class="resource-link-btn">🎯 Watch Solutions</a>
-        </div>
-
-      </div>
+      <div id="chapter-loading" style="text-align:center;padding:2rem;color:var(--text-muted);font-size:0.85rem;">Loading resources...</div>
+      <div class="chapter-content-grid" id="chapter-content" style="display:none;"></div>
 
       <div class="chapter-nav">
-        <a href="ch07.html" class="chapter-nav-btn">← Ch 07: Structural Organisation of Animals</a>
+        <a href="ch07.html" class="chapter-nav-btn">← Structural Organisation of Animals</a>
         <a href="ch09.html" class="chapter-nav-btn">Next: Biomolecules →</a>
       </div>
-
     </div>
   </section>
 </main>
 
-<footer>
-  &copy; 2026 BioSprint &mdash; NEET Biology 20-Day Sprint. All rights reserved.
-</footer>
+<footer>&copy; 2026 BioSprint &mdash; NEET Biology 20-Day Sprint. All rights reserved.</footer>
 
+<script>
+const API='https://script.google.com/macros/s/AKfycbzFqWUb_TlTxldf0Qd-FKJiQxO_4wnAWlUe_JQT6hQG8VR2rva4hBVH1sH9ZgW_1ie7/exec';
+const CH_ID='ch08';
+
+async function load(){
+  try{
+    const r=await fetch(API+'?action=getResources');
+    const all=await r.json();
+    const d=all[CH_ID]||{locked:true};
+    const content=document.getElementById('chapter-content');
+
+    if(d.locked){
+      document.getElementById('chapter-loading').innerHTML='<div style="padding:2rem;text-align:center"><div style="font-size:2rem;margin-bottom:0.75rem">🔒</div><div style="font-weight:600;margin-bottom:0.25rem">Not yet available</div><div style="font-size:0.8rem;color:var(--text-muted)">This chapter will unlock after class.</div></div>';
+      return;
+    }
+
+    document.getElementById('chapter-loading').style.display='none';
+    content.style.display='grid';
+
+    const resources=[
+      {key:'notes',icon:'📄',type:'Notes',title:'Class Notes PDF',desc:'All NCERT points, diagrams and PYQ highlights.',label:'Open Notes PDF'},
+      {key:'recording',icon:'▶',type:'Recording',title:'Class Recording',desc:'Full recording of the live class.',label:'Watch Recording'},
+      {key:'dpp',icon:'📝',type:'DPP',title:'Daily Practice Problems',desc:'Attempt before watching solutions.',label:'Open DPP PDF'},
+      {key:'dppSolutions',icon:'🎯',type:'DPP Solutions',title:'Video Solutions',desc:'Detailed walkthrough of every question.',label:'Watch Solutions'},
+    ];
+
+    content.innerHTML=resources.map(res=>{
+      const link=d[res.key];
+      return `
+        <div class="card chapter-resource-card">
+          <div class="chapter-resource-header">
+            <span class="chapter-resource-icon">${res.icon}</span>
+            <div>
+              <p class="chapter-resource-type">${res.type}</p>
+              <p class="chapter-resource-title">${res.title}</p>
+            </div>
+          </div>
+          <p class="chapter-resource-desc">${res.desc}</p>
+          ${link
+            ? `<a href="${link}" target="_blank" rel="noopener" class="resource-link-btn">${res.icon} ${res.label}</a>`
+            : `<span class="resource-link-btn" style="opacity:0.4;cursor:not-allowed;">Coming soon</span>`
+          }
+        </div>`;
+    }).join('');
+
+  }catch(e){
+    document.getElementById('chapter-loading').textContent='Failed to load. Please refresh.';
+  }
+}
+load();
+</script>
 </body>
 </html>

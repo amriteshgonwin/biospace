@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BioSprint Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:#0a0a0a;--bg-card:#111111;--bg-elevated:#1a1a1a;--border:#222222;
+      --text:#f0f0f0;--text-muted:#888888;--accent:#00c9a7;--accent-hover:#00b396;
+      --accent-dim:rgba(0,201,167,0.1);--red:#ff4545;--red-dim:rgba(255,69,69,0.1);
+      --yellow:#f5a623;--yellow-dim:rgba(245,166,35,0.1);--radius:12px;--radius-sm:8px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+    #login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;}
+    .login-box{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:2.5rem;width:100%;max-width:360px;text-align:center;}
+    .login-box h1{font-size:1.25rem;font-weight:800;color:var(--accent);margin-bottom:0.25rem;}
+    .login-box p{font-size:0.8rem;color:var(--text-muted);margin-bottom:1.5rem;}
+    .login-box input{width:100%;padding:0.75rem 1rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:0.9rem;margin-bottom:0.75rem;outline:none;font-family:inherit;}
+    .login-box input:focus{border-color:var(--accent);}
+    .login-error{font-size:0.78rem;color:var(--red);margin-bottom:0.75rem;display:none;}
+
+    #admin-screen{display:none;}
+    .admin-nav{position:sticky;top:0;z-index:100;background:rgba(10,10,10,0.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2rem;height:56px;display:flex;align-items:center;justify-content:space-between;}
+    .admin-nav-brand{font-weight:800;color:var(--accent);font-size:0.9rem;}
+    .save-status{font-size:0.75rem;color:var(--text-muted);}
+    .save-status.saving{color:var(--yellow);}
+    .save-status.saved{color:var(--accent);}
+    .save-status.error{color:var(--red);}
+
+    .admin-body{max-width:1000px;margin:0 auto;padding:2rem 1.5rem 4rem;display:flex;flex-direction:column;gap:1.5rem;}
+
+    .admin-section{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+    .admin-section-header{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+    .admin-section-title{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);}
+    .admin-section-body{padding:1.5rem;}
+
+    .form-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:1rem;}
+    .form-row:last-child{margin-bottom:0;}
+    .field{display:flex;flex-direction:column;gap:0.4rem;}
+    .field label{font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);}
+    .field input,.field textarea{padding:0.65rem 0.9rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:0.85rem;font-family:inherit;outline:none;transition:border-color 0.2s;}
+    .field input:focus,.field textarea:focus{border-color:var(--accent);}
+    .field textarea{resize:vertical;min-height:80px;}
+
+    .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:0.85rem 1rem;background:var(--bg-elevated);border-radius:var(--radius-sm);margin-bottom:0.75rem;}
+    .toggle-row:last-child{margin-bottom:0;}
+    .toggle-label{font-size:0.85rem;font-weight:600;}
+    .toggle-desc{font-size:0.72rem;color:var(--text-muted);margin-top:0.1rem;}
+    .toggle{position:relative;width:44px;height:24px;flex-shrink:0;}
+    .toggle input{opacity:0;width:0;height:0;}
+    .toggle-slider{position:absolute;inset:0;background:var(--border);border-radius:100px;cursor:pointer;transition:background 0.2s;}
+    .toggle-slider::before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:white;border-radius:50%;transition:transform 0.2s;}
+    .toggle input:checked+.toggle-slider{background:var(--accent);}
+    .toggle input:checked+.toggle-slider::before{transform:translateX(20px);}
+
+    .btn{display:inline-flex;align-items:center;gap:0.4rem;padding:0.6rem 1.2rem;border-radius:var(--radius-sm);font-size:0.82rem;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all 0.2s;text-decoration:none;}
+    .btn-primary{background:var(--accent);color:#000;}
+    .btn-primary:hover{background:var(--accent-hover);}
+    .btn-danger{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,69,69,0.25);}
+    .btn-danger:hover{background:rgba(255,69,69,0.2);}
+    .btn:disabled{opacity:0.4;cursor:not-allowed;}
+
+    .poll-status{display:flex;align-items:center;gap:0.5rem;font-size:0.8rem;font-weight:600;}
+    .poll-dot{width:8px;height:8px;border-radius:50%;background:var(--text-muted);}
+    .poll-dot.active{background:var(--accent);animation:pulse 1.5s infinite;}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+
+    .vote-bars{display:flex;flex-direction:column;gap:0.6rem;margin-top:1rem;}
+    .vote-bar-row{display:flex;align-items:center;gap:0.75rem;}
+    .vote-bar-label{font-size:0.85rem;font-weight:800;color:var(--accent);width:20px;flex-shrink:0;}
+    .vote-bar-track{flex:1;height:32px;background:var(--bg-elevated);border-radius:var(--radius-sm);overflow:hidden;}
+    .vote-bar-fill{height:100%;background:var(--accent);border-radius:var(--radius-sm);transition:width 0.5s ease;display:flex;align-items:center;padding-left:8px;min-width:0;}
+    .vote-count-outside{font-size:0.78rem;font-weight:700;color:var(--text-muted);width:32px;text-align:right;flex-shrink:0;}
+    .vote-total{font-size:0.75rem;color:var(--text-muted);margin-top:0.5rem;}
+
+    .chapter-list{display:flex;flex-direction:column;gap:0.75rem;}
+    .chapter-item{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;}
+    .chapter-item-header{display:flex;align-items:center;gap:1rem;padding:0.85rem 1rem;cursor:pointer;user-select:none;}
+    .chapter-item-header:hover{background:rgba(255,255,255,0.02);}
+    .ch-num{font-size:0.65rem;font-weight:700;color:var(--accent);background:var(--accent-dim);padding:0.2rem 0.5rem;border-radius:4px;flex-shrink:0;}
+    .ch-name{font-size:0.85rem;font-weight:600;flex:1;}
+    .ch-locked-badge{font-size:0.65rem;color:var(--red);background:var(--red-dim);padding:0.2rem 0.5rem;border-radius:100px;font-weight:600;}
+    .ch-open-badge{font-size:0.65rem;color:var(--accent);background:var(--accent-dim);padding:0.2rem 0.5rem;border-radius:100px;font-weight:600;}
+    .ch-arrow{font-size:0.75rem;color:var(--text-muted);transition:transform 0.2s;}
+    .ch-arrow.open{transform:rotate(90deg);}
+    .chapter-item-body{display:none;padding:1rem;border-top:1px solid var(--border);flex-direction:column;gap:0.75rem;}
+    .chapter-item-body.open{display:flex;}
+    .ch-link-row{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;}
+
+    .schedule-rows{display:flex;flex-direction:column;gap:0.5rem;}
+    .schedule-row{display:grid;grid-template-columns:140px 1fr;gap:0.75rem;}
+
+    .announcement-preview{margin-top:0.75rem;padding:0.75rem 1rem;background:var(--yellow-dim);border:1px solid rgba(245,166,35,0.25);border-radius:var(--radius-sm);font-size:0.82rem;color:var(--yellow);display:none;}
+    .announcement-preview.visible{display:block;}
+
+    @media(max-width:600px){
+      .admin-body{padding:1rem 1rem 4rem;}
+      .ch-link-row{grid-template-columns:1fr;}
+      .schedule-row{grid-template-columns:1fr;}
+      .admin-nav{padding:0 1rem;}
+    }
+  </style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-box">
+    <h1>BioSprint Admin</h1>
+    <p>Enter your password to continue</p>
+    <input type="password" id="password-input" placeholder="Password" />
+    <div class="login-error" id="login-error">Wrong password. Try again.</div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="login()">Enter Dashboard</button>
+  </div>
+</div>
+
+<div id="admin-screen">
+  <nav class="admin-nav">
+    <span class="admin-nav-brand">⚡ BioSprint Admin</span>
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <span class="save-status" id="save-status">All saved</span>
+      <button class="btn btn-primary" onclick="saveAll()">Save All Changes</button>
+    </div>
+  </nav>
+
+  <div class="admin-body">
+
+    <!-- LIVE CONTROLS -->
+    <div class="admin-section">
+      <div class="admin-section-header">
+        <span class="admin-section-title">🔴 Live Page</span>
+      </div>
+      <div class="admin-section-body">
+        <div class="toggle-row">
+          <div><div class="toggle-label">LIVE Indicator</div><div class="toggle-desc">Shows red pulsing LIVE badge on the live page</div></div>
+          <label class="toggle"><input type="checkbox" id="liveEnabled" onchange="markDirty()"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="form-row" style="margin-top:1rem;">
+          <div class="field"><label>Day</label><input type="text" id="day" placeholder="Day 3" oninput="markDirty()" /></div>
+          <div class="field"><label>Chapter</label><input type="text" id="chapter" placeholder="Plant Kingdom" oninput="markDirty()" /></div>
+          <div class="field"><label>Topic</label><input type="text" id="topic" placeholder="Gymnosperms" oninput="markDirty()" /></div>
+        </div>
+        <div class="field" style="margin-top:1rem;">
+          <label>Announcement Banner (leave blank to hide)</label>
+          <input type="text" id="announcement" placeholder="e.g. DPP 3 is now live!" oninput="markDirty();updateAnnouncementPreview()" />
+          <div class="announcement-preview" id="announcement-preview"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- POLL -->
+    <div class="admin-section">
+      <div class="admin-section-header">
+        <span class="admin-section-title">📊 Poll</span>
+        <div class="poll-status"><div class="poll-dot" id="poll-dot"></div><span id="poll-status-text">Disabled</span></div>
+      </div>
+      <div class="admin-section-body">
+        <div class="toggle-row">
+          <div><div class="toggle-label">Enable Poll</div><div class="toggle-desc">Shows A B C D buttons to students on live page</div></div>
+          <label class="toggle"><input type="checkbox" id="pollEnabled" onchange="markDirty();updatePollStatus()"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="vote-bars">
+          <div class="vote-bar-row"><span class="vote-bar-label">A</span><div class="vote-bar-track"><div class="vote-bar-fill" id="bar-A" style="width:0%"></div></div><span class="vote-count-outside" id="count-A">0</span></div>
+          <div class="vote-bar-row"><span class="vote-bar-label">B</span><div class="vote-bar-track"><div class="vote-bar-fill" id="bar-B" style="width:0%"></div></div><span class="vote-count-outside" id="count-B">0</span></div>
+          <div class="vote-bar-row"><span class="vote-bar-label">C</span><div class="vote-bar-track"><div class="vote-bar-fill" id="bar-C" style="width:0%"></div></div><span class="vote-count-outside" id="count-C">0</span></div>
+          <div class="vote-bar-row"><span class="vote-bar-label">D</span><div class="vote-bar-track"><div class="vote-bar-fill" id="bar-D" style="width:0%"></div></div><span class="vote-count-outside" id="count-D">0</span></div>
+          <div class="vote-total" id="vote-total">Total votes: 0</div>
+        </div>
+        <div style="margin-top:1.25rem;">
+          <button class="btn btn-danger" onclick="resetVotes()">🔄 Reset Votes (next question)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOME -->
+    <div class="admin-section">
+      <div class="admin-section-header">
+        <span class="admin-section-title">🏠 Home Page</span>
+      </div>
+      <div class="admin-section-body">
+        <div class="toggle-row">
+          <div><div class="toggle-label">Sprint Active</div><div class="toggle-desc">Controls "Join Now" CTA visibility on home page</div></div>
+          <label class="toggle"><input type="checkbox" id="sprintActive" onchange="markDirty()"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="field" style="margin-top:1rem;">
+          <label>Bio / About Text</label>
+          <textarea id="bioText" rows="4" placeholder="Your bio on the home page..." oninput="markDirty()"></textarea>
+        </div>
+        <div style="margin-top:1rem;">
+          <label style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);display:block;margin-bottom:0.75rem;">Daily Schedule</label>
+          <div class="schedule-rows">
+            <div class="schedule-row"><div class="field"><label>Time</label><input type="text" id="scheduleTime1" placeholder="8:00 PM" oninput="markDirty()" /></div><div class="field"><label>Label</label><input type="text" id="scheduleLabel1" placeholder="Live Class begins" oninput="markDirty()" /></div></div>
+            <div class="schedule-row"><div class="field"><label>Time</label><input type="text" id="scheduleTime2" placeholder="~11:00 PM" oninput="markDirty()" /></div><div class="field"><label>Label</label><input type="text" id="scheduleLabel2" placeholder="Class ends + Q&A" oninput="markDirty()" /></div></div>
+            <div class="schedule-row"><div class="field"><label>Time</label><input type="text" id="scheduleTime3" placeholder="Next Day" oninput="markDirty()" /></div><div class="field"><label>Label</label><input type="text" id="scheduleLabel3" placeholder="DPP released" oninput="markDirty()" /></div></div>
+            <div class="schedule-row"><div class="field"><label>Time</label><input type="text" id="scheduleTime4" placeholder="Within 2h" oninput="markDirty()" /></div><div class="field"><label>Label</label><input type="text" id="scheduleLabel4" placeholder="Recording uploaded" oninput="markDirty()" /></div></div>
+            <div class="schedule-row"><div class="field"><label>Time</label><input type="text" id="scheduleTime5" placeholder="Every 5 Days" oninput="markDirty()" /></div><div class="field"><label>Label</label><input type="text" id="scheduleLabel5" placeholder="Milestone Test" oninput="markDirty()" /></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESOURCES -->
+    <div class="admin-section">
+      <div class="admin-section-header">
+        <span class="admin-section-title">📚 Resources — Chapter Links</span>
+      </div>
+      <div class="admin-section-body">
+        <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:1rem;">Click a chapter to expand. Toggle lock and paste links.</p>
+        <div class="chapter-list" id="chapter-list"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const API='https://script.google.com/macros/s/AKfycbzFqWUb_TlTxldf0Qd-FKJiQxO_4wnAWlUe_JQT6hQG8VR2rva4hBVH1sH9ZgW_1ie7/exec';
+const PASSWORD='biosprint2026';
+const CHAPTERS=[
+  {id:'ch01',name:'The Living World'},{id:'ch02',name:'Biological Classification'},
+  {id:'ch03',name:'Plant Kingdom'},{id:'ch04',name:'Animal Kingdom'},
+  {id:'ch05',name:'Morphology of Flowering Plants'},{id:'ch06',name:'Anatomy of Flowering Plants'},
+  {id:'ch07',name:'Structural Organisation of Animals'},{id:'ch08',name:'Cell: The Unit of Life'},
+  {id:'ch09',name:'Biomolecules'},{id:'ch10',name:'Cell Cycle and Cell Division'},
+  {id:'ch11',name:'Photosynthesis in Higher Plants'},{id:'ch12',name:'Respiration in Plants'},
+  {id:'ch13',name:'Plant Growth and Development'},{id:'ch14',name:'Breathing and Exchange of Gases'},
+  {id:'ch15',name:'Body Fluids and Circulation'},{id:'ch16',name:'Excretory Products and Their Elimination'},
+  {id:'ch17',name:'Locomotion and Movement'},{id:'ch18',name:'Neural Control and Coordination'},
+  {id:'ch19',name:'Chemical Control and Integration'},
+];
+let dirty=false;
+
+function login(){
+  const pw=document.getElementById('password-input').value;
+  if(pw===PASSWORD){
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('admin-screen').style.display='block';
+    init();
+  } else {
+    document.getElementById('login-error').style.display='block';
+  }
+}
+document.getElementById('password-input').addEventListener('keydown',e=>{if(e.key==='Enter')login();});
+
+async function init(){
+  buildChapterList();
+  await loadConfig();
+  await loadVotes();
+  setInterval(loadVotes,5000);
+}
+
+async function loadConfig(){
+  try{
+    const r=await fetch(API+'?action=getConfig');
+    const d=await r.json();
+    ['day','chapter','topic','announcement','bioText','scheduleTime1','scheduleLabel1','scheduleTime2','scheduleLabel2','scheduleTime3','scheduleLabel3','scheduleTime4','scheduleLabel4','scheduleTime5','scheduleLabel5'].forEach(f=>{
+      const el=document.getElementById(f);
+      if(el&&d[f]!==undefined)el.value=d[f];
+    });
+    ['liveEnabled','pollEnabled','sprintActive'].forEach(t=>{
+      const el=document.getElementById(t);
+      if(el)el.checked=d[t]==='true'||d[t]===true;
+    });
+    updateAnnouncementPreview();
+    updatePollStatus();
+    const rr=await fetch(API+'?action=getResources');
+    const rd=await rr.json();
+    CHAPTERS.forEach(ch=>{
+      const data=rd[ch.id];
+      if(!data)return;
+      const lockEl=document.getElementById('lock-'+ch.id);
+      if(lockEl)lockEl.checked=!data.locked;
+      ['notes','recording','dpp','dppSolutions'].forEach(f=>{
+        const el=document.getElementById(f+'-'+ch.id);
+        if(el&&data[f])el.value=data[f];
+      });
+      updateBadge(ch.id);
+    });
+  }catch(e){console.error(e);}
+}
+
+async function saveAll(){
+  setStatus('saving','Saving...');
+  try{
+    const payload={action:'adminUpdate',password:PASSWORD};
+    ['day','chapter','topic','announcement','bioText','scheduleTime1','scheduleLabel1','scheduleTime2','scheduleLabel2','scheduleTime3','scheduleLabel3','scheduleTime4','scheduleLabel4','scheduleTime5','scheduleLabel5'].forEach(f=>{
+      const el=document.getElementById(f);if(el)payload[f]=el.value;
+    });
+    payload.liveEnabled=document.getElementById('liveEnabled').checked?'true':'false';
+    payload.pollEnabled=document.getElementById('pollEnabled').checked?'true':'false';
+    payload.sprintActive=document.getElementById('sprintActive').checked?'true':'false';
+    await post(payload);
+    for(const ch of CHAPTERS){
+      const locked=!document.getElementById('lock-'+ch.id)?.checked;
+      await post({action:'updateResource',password:PASSWORD,chapterId:ch.id,locked,
+        notes:document.getElementById('notes-'+ch.id)?.value||'',
+        recording:document.getElementById('recording-'+ch.id)?.value||'',
+        dpp:document.getElementById('dpp-'+ch.id)?.value||'',
+        dppSolutions:document.getElementById('dppSolutions-'+ch.id)?.value||''});
+    }
+    dirty=false;
+    setStatus('saved','✓ All saved');
+    setTimeout(()=>setStatus('','All saved'),3000);
+  }catch(e){setStatus('error','✗ Save failed');}
+}
+
+async function loadVotes(){
+  try{
+    const r=await fetch(API+'?action=getVotes');
+    const d=await r.json();
+    const total=(d.A||0)+(d.B||0)+(d.C||0)+(d.D||0);
+    document.getElementById('vote-total').textContent='Total votes: '+total;
+    ['A','B','C','D'].forEach(opt=>{
+      const count=d[opt]||0;
+      const pct=total>0?(count/total*100):0;
+      document.getElementById('bar-'+opt).style.width=pct+'%';
+      document.getElementById('count-'+opt).textContent=count;
+    });
+  }catch(e){}
+}
+
+async function resetVotes(){
+  if(!confirm('Reset all votes for next question?'))return;
+  try{await post({action:'resetVotes',password:PASSWORD});loadVotes();}
+  catch(e){alert('Reset failed');}
+}
+
+function buildChapterList(){
+  document.getElementById('chapter-list').innerHTML=CHAPTERS.map((ch,i)=>`
+    <div class="chapter-item">
+      <div class="chapter-item-header" onclick="toggleChapter('${ch.id}')">
+        <span class="ch-num">${String(i+1).padStart(2,'0')}</span>
+        <span class="ch-name">${ch.name}</span>
+        <span class="ch-locked-badge" id="badge-${ch.id}">🔒 Locked</span>
+        <span class="ch-arrow" id="arrow-${ch.id}">▶</span>
+      </div>
+      <div class="chapter-item-body" id="body-${ch.id}">
+        <div class="toggle-row">
+          <div><div class="toggle-label">Unlock for students</div><div class="toggle-desc">Students can see links when unlocked</div></div>
+          <label class="toggle"><input type="checkbox" id="lock-${ch.id}" onchange="updateBadge('${ch.id}');markDirty()"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="ch-link-row">
+          <div class="field"><label>📄 Notes PDF (Drive link)</label><input type="url" id="notes-${ch.id}" placeholder="https://drive.google.com/..." oninput="markDirty()" /></div>
+          <div class="field"><label>▶ Recording (YouTube link)</label><input type="url" id="recording-${ch.id}" placeholder="https://youtube.com/..." oninput="markDirty()" /></div>
+          <div class="field"><label>📝 DPP PDF (Drive link)</label><input type="url" id="dpp-${ch.id}" placeholder="https://drive.google.com/..." oninput="markDirty()" /></div>
+          <div class="field"><label>🎯 DPP Solutions (YouTube link)</label><input type="url" id="dppSolutions-${ch.id}" placeholder="https://youtube.com/..." oninput="markDirty()" /></div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function toggleChapter(id){
+  document.getElementById('body-'+id).classList.toggle('open');
+  document.getElementById('arrow-'+id).classList.toggle('open');
+}
+function updateBadge(id){
+  const locked=!document.getElementById('lock-'+id)?.checked;
+  const b=document.getElementById('badge-'+id);
+  if(!b)return;
+  b.textContent=locked?'🔒 Locked':'✅ Open';
+  b.className=locked?'ch-locked-badge':'ch-open-badge';
+}
+function markDirty(){dirty=true;setStatus('saving','Unsaved changes');}
+function setStatus(type,msg){const el=document.getElementById('save-status');el.textContent=msg;el.className='save-status '+type;}
+function updatePollStatus(){
+  const on=document.getElementById('pollEnabled').checked;
+  document.getElementById('poll-dot').className='poll-dot'+(on?' active':'');
+  document.getElementById('poll-status-text').textContent=on?'Active':'Disabled';
+}
+function updateAnnouncementPreview(){
+  const val=document.getElementById('announcement').value.trim();
+  const p=document.getElementById('announcement-preview');
+  if(val){p.textContent='📢 '+val;p.classList.add('visible');}
+  else{p.classList.remove('visible');}
+}
+async function post(data){
+  const r=await fetch(API,{method:'POST',body:JSON.stringify(data)});
+  return r.json();
+}
+window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue='';}});
+</script>
+</body>
+</html>
