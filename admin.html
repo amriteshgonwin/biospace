@@ -14,7 +14,6 @@
     }
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
     body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-
     #login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;}
     .login-box{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:2.5rem;width:100%;max-width:360px;text-align:center;}
     .login-box h1{font-size:1.25rem;font-weight:800;color:var(--accent);margin-bottom:0.25rem;}
@@ -22,7 +21,6 @@
     .login-box input{width:100%;padding:0.75rem 1rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:0.9rem;margin-bottom:0.75rem;outline:none;font-family:inherit;}
     .login-box input:focus{border-color:var(--accent);}
     .login-error{font-size:0.78rem;color:var(--red);margin-bottom:0.75rem;display:none;}
-
     #admin-screen{display:none;}
     .admin-nav{position:sticky;top:0;z-index:100;background:rgba(10,10,10,0.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2rem;height:56px;display:flex;align-items:center;justify-content:space-between;}
     .admin-nav-brand{font-weight:800;color:var(--accent);font-size:0.9rem;}
@@ -30,14 +28,11 @@
     .save-status.saving{color:var(--yellow);}
     .save-status.saved{color:var(--accent);}
     .save-status.error{color:var(--red);}
-
     .admin-body{max-width:1000px;margin:0 auto;padding:2rem 1.5rem 4rem;display:flex;flex-direction:column;gap:1.5rem;}
-
     .admin-section{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
     .admin-section-header{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
     .admin-section-title{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);}
     .admin-section-body{padding:1.5rem;}
-
     .form-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:1rem;}
     .form-row:last-child{margin-bottom:0;}
     .field{display:flex;flex-direction:column;gap:0.4rem;}
@@ -45,7 +40,7 @@
     .field input,.field textarea{padding:0.65rem 0.9rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:0.85rem;font-family:inherit;outline:none;transition:border-color 0.2s;}
     .field input:focus,.field textarea:focus{border-color:var(--accent);}
     .field textarea{resize:vertical;min-height:80px;}
-
+    .field-hint{font-size:0.7rem;color:var(--text-muted);margin-top:0.25rem;}
     .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:0.85rem 1rem;background:var(--bg-elevated);border-radius:var(--radius-sm);margin-bottom:0.75rem;}
     .toggle-row:last-child{margin-bottom:0;}
     .toggle-label{font-size:0.85rem;font-weight:600;}
@@ -56,27 +51,22 @@
     .toggle-slider::before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:white;border-radius:50%;transition:transform 0.2s;}
     .toggle input:checked+.toggle-slider{background:var(--accent);}
     .toggle input:checked+.toggle-slider::before{transform:translateX(20px);}
-
-    .btn{display:inline-flex;align-items:center;gap:0.4rem;padding:0.6rem 1.2rem;border-radius:var(--radius-sm);font-size:0.82rem;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all 0.2s;text-decoration:none;}
+    .btn{display:inline-flex;align-items:center;gap:0.4rem;padding:0.6rem 1.2rem;border-radius:var(--radius-sm);font-size:0.82rem;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all 0.2s;}
     .btn-primary{background:var(--accent);color:#000;}
     .btn-primary:hover{background:var(--accent-hover);}
     .btn-danger{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,69,69,0.25);}
     .btn-danger:hover{background:rgba(255,69,69,0.2);}
-    .btn:disabled{opacity:0.4;cursor:not-allowed;}
-
     .poll-status{display:flex;align-items:center;gap:0.5rem;font-size:0.8rem;font-weight:600;}
     .poll-dot{width:8px;height:8px;border-radius:50%;background:var(--text-muted);}
     .poll-dot.active{background:var(--accent);animation:pulse 1.5s infinite;}
     @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
-
     .vote-bars{display:flex;flex-direction:column;gap:0.6rem;margin-top:1rem;}
     .vote-bar-row{display:flex;align-items:center;gap:0.75rem;}
     .vote-bar-label{font-size:0.85rem;font-weight:800;color:var(--accent);width:20px;flex-shrink:0;}
     .vote-bar-track{flex:1;height:32px;background:var(--bg-elevated);border-radius:var(--radius-sm);overflow:hidden;}
-    .vote-bar-fill{height:100%;background:var(--accent);border-radius:var(--radius-sm);transition:width 0.5s ease;display:flex;align-items:center;padding-left:8px;min-width:0;}
+    .vote-bar-fill{height:100%;background:var(--accent);border-radius:var(--radius-sm);transition:width 0.5s ease;}
     .vote-count-outside{font-size:0.78rem;font-weight:700;color:var(--text-muted);width:32px;text-align:right;flex-shrink:0;}
     .vote-total{font-size:0.75rem;color:var(--text-muted);margin-top:0.5rem;}
-
     .chapter-list{display:flex;flex-direction:column;gap:0.75rem;}
     .chapter-item{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;}
     .chapter-item-header{display:flex;align-items:center;gap:1rem;padding:0.85rem 1rem;cursor:pointer;user-select:none;}
@@ -90,13 +80,12 @@
     .chapter-item-body{display:none;padding:1rem;border-top:1px solid var(--border);flex-direction:column;gap:0.75rem;}
     .chapter-item-body.open{display:flex;}
     .ch-link-row{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;}
-
     .schedule-rows{display:flex;flex-direction:column;gap:0.5rem;}
     .schedule-row{display:grid;grid-template-columns:140px 1fr;gap:0.75rem;}
-
     .announcement-preview{margin-top:0.75rem;padding:0.75rem 1rem;background:var(--yellow-dim);border:1px solid rgba(245,166,35,0.25);border-radius:var(--radius-sm);font-size:0.82rem;color:var(--yellow);display:none;}
     .announcement-preview.visible{display:block;}
-
+    .stream-preview{margin-top:0.5rem;padding:0.5rem 0.75rem;background:var(--accent-dim);border:1px solid rgba(0,201,167,0.2);border-radius:var(--radius-sm);font-size:0.75rem;color:var(--accent);display:none;}
+    .stream-preview.visible{display:block;}
     @media(max-width:600px){
       .admin-body{padding:1rem 1rem 4rem;}
       .ch-link-row{grid-template-columns:1fr;}
@@ -128,7 +117,7 @@
 
   <div class="admin-body">
 
-    <!-- LIVE CONTROLS -->
+    <!-- LIVE -->
     <div class="admin-section">
       <div class="admin-section-header">
         <span class="admin-section-title">🔴 Live Page</span>
@@ -142,6 +131,12 @@
           <div class="field"><label>Day</label><input type="text" id="day" placeholder="Day 3" oninput="markDirty()" /></div>
           <div class="field"><label>Chapter</label><input type="text" id="chapter" placeholder="Plant Kingdom" oninput="markDirty()" /></div>
           <div class="field"><label>Topic</label><input type="text" id="topic" placeholder="Gymnosperms" oninput="markDirty()" /></div>
+        </div>
+        <div class="field" style="margin-top:1rem;">
+          <label>▶ Stream / Video URL or ID</label>
+          <input type="text" id="streamUrl" placeholder="Paste YouTube URL or video ID e.g. dQw4w9WgXcQ" oninput="markDirty();updateStreamPreview()" />
+          <div class="field-hint">Accepts full YouTube URL (youtube.com/watch?v=...) or just the 11-character video ID. Works for live streams and recordings.</div>
+          <div class="stream-preview" id="stream-preview"></div>
         </div>
         <div class="field" style="margin-top:1rem;">
           <label>Announcement Banner (leave blank to hide)</label>
@@ -159,7 +154,7 @@
       </div>
       <div class="admin-section-body">
         <div class="toggle-row">
-          <div><div class="toggle-label">Enable Poll</div><div class="toggle-desc">Shows A B C D buttons to students on live page</div></div>
+          <div><div class="toggle-label">Enable Poll</div><div class="toggle-desc">Shows A B C D buttons to students on the live page</div></div>
           <label class="toggle"><input type="checkbox" id="pollEnabled" onchange="markDirty();updatePollStatus()"><span class="toggle-slider"></span></label>
         </div>
         <div class="vote-bars">
@@ -182,7 +177,7 @@
       </div>
       <div class="admin-section-body">
         <div class="toggle-row">
-          <div><div class="toggle-label">Sprint Active</div><div class="toggle-desc">Controls "Join Now" CTA visibility on home page</div></div>
+          <div><div class="toggle-label">Sprint Active</div><div class="toggle-desc">Controls "Join Now" CTA on home page</div></div>
           <label class="toggle"><input type="checkbox" id="sprintActive" onchange="markDirty()"><span class="toggle-slider"></span></label>
         </div>
         <div class="field" style="margin-top:1rem;">
@@ -208,7 +203,7 @@
         <span class="admin-section-title">📚 Resources — Chapter Links</span>
       </div>
       <div class="admin-section-body">
-        <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:1rem;">Click a chapter to expand. Toggle lock and paste links.</p>
+        <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:1rem;">Click a chapter to expand. Toggle lock and paste your Drive / YouTube links.</p>
         <div class="chapter-list" id="chapter-list"></div>
       </div>
     </div>
@@ -239,43 +234,34 @@ function login(){
     document.getElementById('login-screen').style.display='none';
     document.getElementById('admin-screen').style.display='block';
     init();
-  } else {
-    document.getElementById('login-error').style.display='block';
-  }
+  }else{document.getElementById('login-error').style.display='block';}
 }
 document.getElementById('password-input').addEventListener('keydown',e=>{if(e.key==='Enter')login();});
 
-async function init(){
-  buildChapterList();
-  await loadConfig();
-  await loadVotes();
-  setInterval(loadVotes,5000);
-}
+async function init(){buildChapterList();await loadConfig();await loadVotes();setInterval(loadVotes,5000);}
 
 async function loadConfig(){
   try{
     const r=await fetch(API+'?action=getConfig');
     const d=await r.json();
-    ['day','chapter','topic','announcement','bioText','scheduleTime1','scheduleLabel1','scheduleTime2','scheduleLabel2','scheduleTime3','scheduleLabel3','scheduleTime4','scheduleLabel4','scheduleTime5','scheduleLabel5'].forEach(f=>{
-      const el=document.getElementById(f);
-      if(el&&d[f]!==undefined)el.value=d[f];
+    ['day','chapter','topic','announcement','streamUrl','bioText',
+     'scheduleTime1','scheduleLabel1','scheduleTime2','scheduleLabel2',
+     'scheduleTime3','scheduleLabel3','scheduleTime4','scheduleLabel4',
+     'scheduleTime5','scheduleLabel5'].forEach(f=>{
+      const el=document.getElementById(f);if(el&&d[f]!==undefined)el.value=d[f];
     });
     ['liveEnabled','pollEnabled','sprintActive'].forEach(t=>{
-      const el=document.getElementById(t);
-      if(el)el.checked=d[t]==='true'||d[t]===true;
+      const el=document.getElementById(t);if(el)el.checked=d[t]==='true'||d[t]===true;
     });
-    updateAnnouncementPreview();
-    updatePollStatus();
+    updateAnnouncementPreview();updateStreamPreview();updatePollStatus();
     const rr=await fetch(API+'?action=getResources');
     const rd=await rr.json();
     CHAPTERS.forEach(ch=>{
-      const data=rd[ch.id];
-      if(!data)return;
+      const data=rd[ch.id];if(!data)return;
       const lockEl=document.getElementById('lock-'+ch.id);
       if(lockEl)lockEl.checked=!data.locked;
       ['notes','recording','dpp','dppSolutions'].forEach(f=>{
-        const el=document.getElementById(f+'-'+ch.id);
-        if(el&&data[f])el.value=data[f];
+        const el=document.getElementById(f+'-'+ch.id);if(el&&data[f])el.value=data[f];
       });
       updateBadge(ch.id);
     });
@@ -286,7 +272,10 @@ async function saveAll(){
   setStatus('saving','Saving...');
   try{
     const payload={action:'adminUpdate',password:PASSWORD};
-    ['day','chapter','topic','announcement','bioText','scheduleTime1','scheduleLabel1','scheduleTime2','scheduleLabel2','scheduleTime3','scheduleLabel3','scheduleTime4','scheduleLabel4','scheduleTime5','scheduleLabel5'].forEach(f=>{
+    ['day','chapter','topic','announcement','streamUrl','bioText',
+     'scheduleTime1','scheduleLabel1','scheduleTime2','scheduleLabel2',
+     'scheduleTime3','scheduleLabel3','scheduleTime4','scheduleLabel4',
+     'scheduleTime5','scheduleLabel5'].forEach(f=>{
       const el=document.getElementById(f);if(el)payload[f]=el.value;
     });
     payload.liveEnabled=document.getElementById('liveEnabled').checked?'true':'false';
@@ -301,9 +290,7 @@ async function saveAll(){
         dpp:document.getElementById('dpp-'+ch.id)?.value||'',
         dppSolutions:document.getElementById('dppSolutions-'+ch.id)?.value||''});
     }
-    dirty=false;
-    setStatus('saved','✓ All saved');
-    setTimeout(()=>setStatus('','All saved'),3000);
+    dirty=false;setStatus('saved','✓ All saved');setTimeout(()=>setStatus('','All saved'),3000);
   }catch(e){setStatus('error','✗ Save failed');}
 }
 
@@ -324,8 +311,11 @@ async function loadVotes(){
 
 async function resetVotes(){
   if(!confirm('Reset all votes for next question?'))return;
-  try{await post({action:'resetVotes',password:PASSWORD});loadVotes();}
-  catch(e){alert('Reset failed');}
+  try{
+    await post({action:'resetVotes',password:PASSWORD});
+    await post({action:'adminUpdate',password:PASSWORD,pollResetTime:Date.now().toString()});
+    loadVotes();
+  }catch(e){alert('Reset failed. Try again.');}
 }
 
 function buildChapterList(){
@@ -352,34 +342,29 @@ function buildChapterList(){
     </div>`).join('');
 }
 
-function toggleChapter(id){
-  document.getElementById('body-'+id).classList.toggle('open');
-  document.getElementById('arrow-'+id).classList.toggle('open');
-}
-function updateBadge(id){
-  const locked=!document.getElementById('lock-'+id)?.checked;
-  const b=document.getElementById('badge-'+id);
-  if(!b)return;
-  b.textContent=locked?'🔒 Locked':'✅ Open';
-  b.className=locked?'ch-locked-badge':'ch-open-badge';
-}
+function toggleChapter(id){document.getElementById('body-'+id).classList.toggle('open');document.getElementById('arrow-'+id).classList.toggle('open');}
+function updateBadge(id){const locked=!document.getElementById('lock-'+id)?.checked;const b=document.getElementById('badge-'+id);if(!b)return;b.textContent=locked?'🔒 Locked':'✅ Open';b.className=locked?'ch-locked-badge':'ch-open-badge';}
 function markDirty(){dirty=true;setStatus('saving','Unsaved changes');}
 function setStatus(type,msg){const el=document.getElementById('save-status');el.textContent=msg;el.className='save-status '+type;}
-function updatePollStatus(){
-  const on=document.getElementById('pollEnabled').checked;
-  document.getElementById('poll-dot').className='poll-dot'+(on?' active':'');
-  document.getElementById('poll-status-text').textContent=on?'Active':'Disabled';
+function updatePollStatus(){const on=document.getElementById('pollEnabled').checked;document.getElementById('poll-dot').className='poll-dot'+(on?' active':'');document.getElementById('poll-status-text').textContent=on?'Active':'Disabled';}
+function updateAnnouncementPreview(){const val=document.getElementById('announcement').value.trim();const p=document.getElementById('announcement-preview');if(val){p.textContent='📢 '+val;p.classList.add('visible');}else{p.classList.remove('visible');}}
+
+function extractVideoId(input){
+  if(!input)return null;
+  input=input.trim();
+  if(/^[a-zA-Z0-9_-]{11}$/.test(input))return input;
+  try{const url=new URL(input);if(url.hostname.includes('youtu.be'))return url.pathname.slice(1);return url.searchParams.get('v');}
+  catch(e){return input;}
 }
-function updateAnnouncementPreview(){
-  const val=document.getElementById('announcement').value.trim();
-  const p=document.getElementById('announcement-preview');
-  if(val){p.textContent='📢 '+val;p.classList.add('visible');}
+function updateStreamPreview(){
+  const val=document.getElementById('streamUrl').value.trim();
+  const p=document.getElementById('stream-preview');
+  const id=extractVideoId(val);
+  if(id){p.textContent='✓ Video ID detected: '+id;p.classList.add('visible');}
   else{p.classList.remove('visible');}
 }
-async function post(data){
-  const r=await fetch(API,{method:'POST',body:JSON.stringify(data)});
-  return r.json();
-}
+
+async function post(data){const r=await fetch(API,{method:'POST',body:JSON.stringify(data)});return r.json();}
 window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue='';}});
 </script>
 </body>
