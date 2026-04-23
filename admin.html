@@ -117,7 +117,6 @@
 
   <div class="admin-body">
 
-    <!-- LIVE -->
     <div class="admin-section">
       <div class="admin-section-header">
         <span class="admin-section-title">🔴 Live Page</span>
@@ -134,8 +133,8 @@
         </div>
         <div class="field" style="margin-top:1rem;">
           <label>▶ Stream / Video URL or ID</label>
-          <input type="text" id="streamUrl" placeholder="Paste YouTube URL or video ID e.g. dQw4w9WgXcQ" oninput="markDirty();updateStreamPreview()" />
-          <div class="field-hint">Accepts full YouTube URL (youtube.com/watch?v=...) or just the 11-character video ID. Works for live streams and recordings.</div>
+          <input type="text" id="streamUrl" placeholder="Paste any YouTube URL or video ID" oninput="markDirty();updateStreamPreview()" />
+          <div class="field-hint">Works with youtube.com/watch?v=, youtu.be/, youtube.com/live/, or just the 11-character ID.</div>
           <div class="stream-preview" id="stream-preview"></div>
         </div>
         <div class="field" style="margin-top:1rem;">
@@ -146,7 +145,6 @@
       </div>
     </div>
 
-    <!-- POLL -->
     <div class="admin-section">
       <div class="admin-section-header">
         <span class="admin-section-title">📊 Poll</span>
@@ -170,7 +168,6 @@
       </div>
     </div>
 
-    <!-- HOME -->
     <div class="admin-section">
       <div class="admin-section-header">
         <span class="admin-section-title">🏠 Home Page</span>
@@ -197,7 +194,6 @@
       </div>
     </div>
 
-    <!-- RESOURCES -->
     <div class="admin-section">
       <div class="admin-section-header">
         <span class="admin-section-title">📚 Resources — Chapter Links</span>
@@ -227,6 +223,20 @@ const CHAPTERS=[
   {id:'ch19',name:'Chemical Control and Integration'},
 ];
 let dirty=false;
+
+function extractVideoId(input){
+  if(!input)return null;
+  input=input.trim();
+  if(/^[a-zA-Z0-9_-]{11}$/.test(input))return input;
+  try{
+    const url=new URL(input);
+    if(url.searchParams.get('v'))return url.searchParams.get('v');
+    if(url.hostname.includes('youtu.be'))return url.pathname.slice(1).split('?')[0];
+    if(url.pathname.includes('/live/'))return url.pathname.split('/live/')[1].split('?')[0];
+    if(url.pathname.includes('/embed/'))return url.pathname.split('/embed/')[1].split('?')[0];
+  }catch(e){return input;}
+  return input;
+}
 
 function login(){
   const pw=document.getElementById('password-input').value;
@@ -348,22 +358,13 @@ function markDirty(){dirty=true;setStatus('saving','Unsaved changes');}
 function setStatus(type,msg){const el=document.getElementById('save-status');el.textContent=msg;el.className='save-status '+type;}
 function updatePollStatus(){const on=document.getElementById('pollEnabled').checked;document.getElementById('poll-dot').className='poll-dot'+(on?' active':'');document.getElementById('poll-status-text').textContent=on?'Active':'Disabled';}
 function updateAnnouncementPreview(){const val=document.getElementById('announcement').value.trim();const p=document.getElementById('announcement-preview');if(val){p.textContent='📢 '+val;p.classList.add('visible');}else{p.classList.remove('visible');}}
-
-function extractVideoId(input){
-  if(!input)return null;
-  input=input.trim();
-  if(/^[a-zA-Z0-9_-]{11}$/.test(input))return input;
-  try{const url=new URL(input);if(url.hostname.includes('youtu.be'))return url.pathname.slice(1);return url.searchParams.get('v');}
-  catch(e){return input;}
-}
 function updateStreamPreview(){
   const val=document.getElementById('streamUrl').value.trim();
   const p=document.getElementById('stream-preview');
   const id=extractVideoId(val);
-  if(id){p.textContent='✓ Video ID detected: '+id;p.classList.add('visible');}
+  if(id&&id.length===11){p.textContent='✓ Video ID: '+id;p.classList.add('visible');}
   else{p.classList.remove('visible');}
 }
-
 async function post(data){const r=await fetch(API,{method:'POST',body:JSON.stringify(data)});return r.json();}
 window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue='';}});
 </script>
