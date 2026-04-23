@@ -365,8 +365,17 @@ function updateStreamPreview(){
   if(id&&id.length===11){p.textContent='✓ Video ID: '+id;p.classList.add('visible');}
   else{p.classList.remove('visible');}
 }
-async function post(data){const r=await fetch(API,{method:'POST',body:JSON.stringify(data)});return r.json();}
-window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue='';}});
+async function post(data){
+  const r = await fetch(API, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  });
+  return r.json();
+}
+  window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue='';}});
 </script>
 </body>
 </html>
