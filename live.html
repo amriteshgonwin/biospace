@@ -9,37 +9,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
   <style>
-    .poll-option-btn {
-      padding: 1rem;
-      background: var(--bg-elevated);
-      border: 2px solid var(--border);
-      border-radius: var(--radius-sm);
-      color: var(--text);
-      font-size: 1.1rem;
-      font-weight: 800;
-      font-family: inherit;
-      cursor: pointer;
-      transition: all 0.15s;
-      width: 100%;
-    }
-    .poll-option-btn:hover:not(:disabled) {
-      border-color: var(--accent);
-      color: var(--accent);
-      background: var(--accent-dim);
-      transform: translateY(-1px);
-    }
-    .poll-option-btn:active:not(:disabled) { transform: scale(0.97); }
-    .poll-option-btn.selected {
-      border-color: var(--accent);
-      background: var(--accent);
-      color: #000;
-    }
-    .poll-option-btn:disabled { cursor: not-allowed; opacity: 0.6; }
+    .poll-option-btn{padding:1rem;background:var(--bg-elevated);border:2px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:1.1rem;font-weight:800;font-family:inherit;cursor:pointer;transition:all 0.15s;width:100%;}
+    .poll-option-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent);background:var(--accent-dim);transform:translateY(-1px);}
+    .poll-option-btn:active:not(:disabled){transform:scale(0.97);}
+    .poll-option-btn.selected{border-color:var(--accent);background:var(--accent);color:#000;}
+    .poll-option-btn:disabled{cursor:not-allowed;opacity:0.6;}
   </style>
 </head>
 <body>
 
-<!-- ANNOUNCEMENT BANNER -->
 <div id="announcement-banner" style="display:none;background:#1a1500;border-bottom:1px solid rgba(245,166,35,0.3);padding:0.6rem 1.5rem;text-align:center;font-size:0.82rem;font-weight:600;color:#f5a623;position:fixed;top:0;left:0;right:0;z-index:200;"></div>
 
 <nav id="main-nav">
@@ -55,12 +33,10 @@
   <div class="container">
     <div class="live-layout">
 
-      <!-- LEFT: Video + meta -->
       <div>
         <div class="live-topbar">
           <div class="live-indicator" id="live-indicator" style="display:none;">
-            <span class="live-dot"></span>
-            Live
+            <span class="live-dot"></span>Live
           </div>
           <div class="live-topbar-sep" id="live-sep" style="display:none;"></div>
           <div class="live-topbar-item">
@@ -80,39 +56,26 @@
         </div>
 
         <div class="video-wrapper">
-          <!-- Placeholder shown when no video is set -->
           <div id="video-placeholder" class="video-placeholder">
             <span class="video-placeholder-icon">▶</span>
             <span>Stream will appear here when class begins</span>
           </div>
-          <!-- iframe hidden until video ID is set from admin -->
-          <iframe
-            id="stream-iframe"
-            src=""
-            style="display:none;position:absolute;inset:0;width:100%;height:100%;border:none;"
+          <iframe id="stream-iframe" src="" style="display:none;position:absolute;inset:0;width:100%;height:100%;border:none;"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
-            title="BioSprint Live Class">
-          </iframe>
+            allowfullscreen title="BioSprint Live Class"></iframe>
         </div>
       </div>
 
-      <!-- RIGHT: Side panel -->
       <div class="live-panel">
 
-        <!-- POLL -->
-        <div class="card" id="poll-card">
+        <div class="card">
           <p class="panel-title">Quick Poll</p>
-
-          <!-- DISABLED -->
           <div id="poll-disabled">
             <div style="text-align:center;padding:1.25rem 0;color:var(--text-muted);font-size:0.82rem;">
               <div style="font-size:1.5rem;margin-bottom:0.5rem;opacity:0.3;">📊</div>
               Poll will appear here during class
             </div>
           </div>
-
-          <!-- VOTING -->
           <div id="poll-voting" style="display:none;">
             <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.85rem;">Question is on stream. Tap your answer:</p>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;">
@@ -122,15 +85,12 @@
               <button class="poll-option-btn" onclick="vote('D')" id="btn-D">D</button>
             </div>
           </div>
-
-          <!-- VOTED -->
           <div id="poll-voted" style="display:none;">
             <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:0.4rem;">Your answer: <strong id="your-answer" style="color:var(--accent);font-size:1rem;"></strong></p>
             <p style="font-size:0.75rem;color:var(--text-muted);">Results will be shown on stream ✓</p>
           </div>
         </div>
 
-        <!-- Instructions -->
         <div class="card">
           <p class="panel-title">Instructions</p>
           <ul class="notes-list">
@@ -142,7 +102,6 @@
           </ul>
         </div>
 
-        <!-- Important Notes -->
         <div class="card">
           <p class="panel-title">Important Notes</p>
           <ul class="notes-list">
@@ -162,148 +121,138 @@
 </footer>
 
 <script>
-const API = 'https://script.google.com/macros/s/AKfycbzFqWUb_TlTxldf0Qd-FKJiQxO_4wnAWlUe_JQT6hQG8VR2rva4hBVH1sH9ZgW_1ie7/exec';
-const VOTED_KEY = 'biosprint_voted';
-const VOTED_TIME_KEY = 'biosprint_voted_time';
+const API='https://script.google.com/macros/s/AKfycbzFqWUb_TlTxldf0Qd-FKJiQxO_4wnAWlUe_JQT6hQG8VR2rva4hBVH1sH9ZgW_1ie7/exec';
+const VOTED_KEY='biosprint_voted';
+const VOTED_TIME_KEY='biosprint_voted_time';
+let pollWasEnabled=false;
+let hasVoted=false;
+let currentVideoId=null;
 
-let pollWasEnabled = false;
-let hasVoted = false;
-let currentVideoId = null;
-
-function extractVideoId(input) {
-  if (!input) return null;
-  input = input.trim();
-  if (/^[a-zA-Z0-9_-]{11}$/.test(input)) return input;
-  try {
-    const url = new URL(input);
-    if (url.hostname.includes('youtu.be')) return url.pathname.slice(1);
-    return url.searchParams.get('v');
-  } catch(e) { return input; }
+function extractVideoId(input){
+  if(!input)return null;
+  input=input.trim();
+  if(/^[a-zA-Z0-9_-]{11}$/.test(input))return input;
+  try{
+    const url=new URL(input);
+    if(url.searchParams.get('v'))return url.searchParams.get('v');
+    if(url.hostname.includes('youtu.be'))return url.pathname.slice(1).split('?')[0];
+    if(url.pathname.includes('/live/'))return url.pathname.split('/live/')[1].split('?')[0];
+    if(url.pathname.includes('/embed/'))return url.pathname.split('/embed/')[1].split('?')[0];
+  }catch(e){return input;}
+  return input;
 }
 
-async function fetchConfig() {
-  try {
-    const r = await fetch(API + '?action=getConfig');
-    const d = await r.json();
+async function fetchConfig(){
+  try{
+    const r=await fetch(API+'?action=getConfig');
+    const d=await r.json();
 
-    // Day / Chapter / Topic
-    document.getElementById('day-display').textContent = d.day || '—';
-    document.getElementById('chapter-display').textContent = d.chapter || '—';
-    document.getElementById('topic-display').textContent = d.topic || '—';
+    document.getElementById('day-display').textContent=d.day||'—';
+    document.getElementById('chapter-display').textContent=d.chapter||'—';
+    document.getElementById('topic-display').textContent=d.topic||'—';
 
-    // Video embed — only update src if ID actually changed (avoids reloading mid-stream)
-    const videoId = extractVideoId(d.streamUrl);
-    const iframe = document.getElementById('stream-iframe');
-    const placeholder = document.getElementById('video-placeholder');
-    if (videoId && videoId !== currentVideoId) {
-      currentVideoId = videoId;
-      iframe.src = `https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0&iv_load_policy=3&color=white`;
-      iframe.style.display = 'block';
-      placeholder.style.display = 'none';
-    } else if (!videoId) {
-      currentVideoId = null;
-      iframe.style.display = 'none';
-      iframe.src = '';
-      placeholder.style.display = 'flex';
+    const videoId=extractVideoId(d.streamUrl);
+    const iframe=document.getElementById('stream-iframe');
+    const placeholder=document.getElementById('video-placeholder');
+    if(videoId&&videoId.length===11&&videoId!==currentVideoId){
+      currentVideoId=videoId;
+      iframe.src=`https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0&iv_load_policy=3&color=white`;
+      iframe.style.display='block';
+      placeholder.style.display='none';
+    }else if(!videoId||videoId.length!==11){
+      currentVideoId=null;
+      iframe.style.display='none';
+      iframe.src='';
+      placeholder.style.display='flex';
     }
 
-    // LIVE indicator
-    const liveOn = d.liveEnabled === 'true' || d.liveEnabled === true;
-    document.getElementById('live-indicator').style.display = liveOn ? 'flex' : 'none';
-    document.getElementById('live-sep').style.display = liveOn ? 'block' : 'none';
+    const liveOn=d.liveEnabled==='true'||d.liveEnabled===true;
+    document.getElementById('live-indicator').style.display=liveOn?'flex':'none';
+    document.getElementById('live-sep').style.display=liveOn?'block':'none';
 
-    // Announcement banner
-    const banner = document.getElementById('announcement-banner');
-    const nav = document.getElementById('main-nav');
-    const main = document.getElementById('main-content');
-    if (d.announcement && d.announcement.trim()) {
-      banner.textContent = '📢 ' + d.announcement.trim();
-      banner.style.display = 'block';
-      nav.style.top = '36px';
-      main.style.paddingTop = '96px';
-    } else {
-      banner.style.display = 'none';
-      nav.style.top = '0';
-      main.style.paddingTop = '60px';
+    const banner=document.getElementById('announcement-banner');
+    const nav=document.getElementById('main-nav');
+    const main=document.getElementById('main-content');
+    if(d.announcement&&d.announcement.trim()){
+      banner.textContent='📢 '+d.announcement.trim();
+      banner.style.display='block';
+      nav.style.top='36px';
+      main.style.paddingTop='96px';
+    }else{
+      banner.style.display='none';
+      nav.style.top='0';
+      main.style.paddingTop='60px';
     }
 
-    // Poll reset detection using timestamp
-    const serverResetTime = parseInt(d.pollResetTime) || 0;
-    const myVoteTime = parseInt(localStorage.getItem(VOTED_TIME_KEY)) || 0;
-    if (serverResetTime > myVoteTime) {
-      // Admin reset votes after student voted — clear their local state
+    const serverResetTime=parseInt(d.pollResetTime)||0;
+    const myVoteTime=parseInt(localStorage.getItem(VOTED_TIME_KEY))||0;
+    if(serverResetTime>myVoteTime){
       localStorage.removeItem(VOTED_KEY);
       localStorage.removeItem(VOTED_TIME_KEY);
-      hasVoted = false;
+      hasVoted=false;
     }
 
-    const pollOn = d.pollEnabled === 'true' || d.pollEnabled === true;
-
-    // If poll was just turned off — clear local vote so next enable is fresh
-    if (pollWasEnabled && !pollOn) {
+    const pollOn=d.pollEnabled==='true'||d.pollEnabled===true;
+    if(pollWasEnabled&&!pollOn){
       localStorage.removeItem(VOTED_KEY);
       localStorage.removeItem(VOTED_TIME_KEY);
-      hasVoted = false;
+      hasVoted=false;
     }
-    pollWasEnabled = pollOn;
+    pollWasEnabled=pollOn;
 
-    if (!pollOn) {
+    if(!pollOn){
       showPollState('disabled');
-    } else {
-      const votedOption = localStorage.getItem(VOTED_KEY);
-      if (votedOption) {
-        hasVoted = true;
-        document.getElementById('your-answer').textContent = votedOption;
+    }else{
+      const votedOption=localStorage.getItem(VOTED_KEY);
+      if(votedOption){
+        hasVoted=true;
+        document.getElementById('your-answer').textContent=votedOption;
         showPollState('voted');
-      } else {
-        hasVoted = false;
-        // Re-enable buttons in case they were disabled from previous vote
-        ['A','B','C','D'].forEach(o => {
-          const btn = document.getElementById('btn-'+o);
-          btn.disabled = false;
+      }else{
+        hasVoted=false;
+        ['A','B','C','D'].forEach(o=>{
+          const btn=document.getElementById('btn-'+o);
+          btn.disabled=false;
           btn.classList.remove('selected');
         });
         showPollState('voting');
       }
     }
-
-  } catch(e) { console.error(e); }
+  }catch(e){console.error(e);}
 }
 
-function showPollState(state) {
-  document.getElementById('poll-disabled').style.display = state === 'disabled' ? 'block' : 'none';
-  document.getElementById('poll-voting').style.display  = state === 'voting'   ? 'block' : 'none';
-  document.getElementById('poll-voted').style.display   = state === 'voted'    ? 'block' : 'none';
+function showPollState(state){
+  document.getElementById('poll-disabled').style.display=state==='disabled'?'block':'none';
+  document.getElementById('poll-voting').style.display=state==='voting'?'block':'none';
+  document.getElementById('poll-voted').style.display=state==='voted'?'block':'none';
 }
 
-async function vote(option) {
-  if (hasVoted) return;
-  hasVoted = true;
-
-  ['A','B','C','D'].forEach(o => {
-    const btn = document.getElementById('btn-'+o);
-    btn.classList.toggle('selected', o === option);
-    btn.disabled = true;
+async function vote(option){
+  if(hasVoted)return;
+  hasVoted=true;
+  ['A','B','C','D'].forEach(o=>{
+    const btn=document.getElementById('btn-'+o);
+    btn.classList.toggle('selected',o===option);
+    btn.disabled=true;
   });
-
-  try {
-    await fetch(API, { method:'POST', body:JSON.stringify({action:'vote', option}) });
-    localStorage.setItem(VOTED_KEY, option);
-    localStorage.setItem(VOTED_TIME_KEY, Date.now().toString());
-    setTimeout(() => {
-      document.getElementById('your-answer').textContent = option;
+  try{
+    await fetch(API,{method:'POST',body:JSON.stringify({action:'vote',option})});
+    localStorage.setItem(VOTED_KEY,option);
+    localStorage.setItem(VOTED_TIME_KEY,Date.now().toString());
+    setTimeout(()=>{
+      document.getElementById('your-answer').textContent=option;
       showPollState('voted');
-    }, 350);
-  } catch(e) {
-    localStorage.setItem(VOTED_KEY, option);
-    localStorage.setItem(VOTED_TIME_KEY, Date.now().toString());
-    document.getElementById('your-answer').textContent = option;
+    },350);
+  }catch(e){
+    localStorage.setItem(VOTED_KEY,option);
+    localStorage.setItem(VOTED_TIME_KEY,Date.now().toString());
+    document.getElementById('your-answer').textContent=option;
     showPollState('voted');
   }
 }
 
 fetchConfig();
-setInterval(fetchConfig, 5000);
+setInterval(fetchConfig,5000);
 </script>
 
 </body>
